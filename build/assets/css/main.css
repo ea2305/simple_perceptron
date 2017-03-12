@@ -1,0 +1,33 @@
+html,body{
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.flex{
+	display: flex;
+}
+
+.center{
+    align-self: center;
+}
+
+.level{
+    justify-content: center;
+}
+
+.column{
+	flex-direction: column;
+}
+
+.row{
+	flex-direction: row;
+}
+
+.frame{
+	margin : 3rem ;
+}
+
+.frame-h{
+	margin : 0rem 1rem ;	
+}
