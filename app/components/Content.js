@@ -60,6 +60,7 @@ export default class Content extends Component{
 
 								<MenuItem value={1} primaryText="OR" />
 								<MenuItem value={2} primaryText="AND" />
+								<MenuItem value={3} primaryText="XOR" />
 
 							</SelectField>
 						</div>

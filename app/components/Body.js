@@ -30,12 +30,26 @@ export default class Body extends React.Component{
 			Tol       : 0.01,
 			tetha     : 1,
 			N         : 0.01,
-			X         : [
-				[ 0 , 0 ],
-				[ 1 , 0 ],
-				[ 0 , 1 ],
-				[ 1 , 1 ]
-			],
+			X         : {
+				AND : [
+					[ 0 , 0 ],
+					[ 1 , 0 ],
+					[ 0 , 1 ],
+					[ 1 , 1 ]
+				],
+				OR : [
+					[ 0 , 0 ],
+					[ 1 , 0 ],
+					[ 0 , 1 ],
+					[ 1 , 1 ]
+				],
+				XOR : [
+					[ 0 , 0 , 0],
+					[ 1 , 0 , 0],
+					[ 0 , 1 , 0],
+					[ 1 , 1 , 1]
+				]
+			},
 			W : "0.1,0.1",
 			dataGraph : [],
 			tableData : [],
@@ -47,7 +61,8 @@ export default class Body extends React.Component{
 			},
 			outputMode : {
 				or : [0,1,1,1],
-				and : [0,0,0,1]
+				and : [0,0,0,1],
+				xor : [0,1,1,0]
 			}
 			
 		};
@@ -78,7 +93,11 @@ export default class Body extends React.Component{
 	}
 
 	changeMode = ( event, index, value ) => {
-		this.setState({mode : value});
+		if(value == 3){
+			this.setState({mode : value,W : "0.1,0.1,0.1"});	
+		}else{
+			this.setState({mode : value,W : "0.1,0.1"});	
+		}
 	}
 	changeField = ( event , newValue ) => {
 		console.log( event.currentTarget.name );
@@ -94,8 +113,25 @@ export default class Body extends React.Component{
 			return;
 		}
 
-		let Y = ( _.mode == 1 )? 
-			_.outputMode.or : _.outputMode.and;
+		let vectorX = (_.mode == 3)? _.X.XOR : _.X.AND;
+
+		let Y;
+		switch( _.mode ){
+
+			case 1:
+			Y = _.outputMode.or;
+			break;
+
+			case 2:
+			Y = _.outputMode.and;
+			break;
+
+			case 3:
+			Y = _.outputMode.xor;
+			break;
+
+		}
+	
 		let W = _.W.split(',').map( (e) => { return parseFloat(e) } );
 
 		let perceptron = new Perceptron( 
@@ -103,9 +139,10 @@ export default class Body extends React.Component{
 		  	Y ,
 		  	_.tetha ,
 		  	_.Tol,
-		  	_.X ,
+		  	vectorX ,
 		  	W
 		);
+
 		let data = perceptron.getW();
 		this.setState({
 			moreInfo : true,
@@ -117,7 +154,7 @@ export default class Body extends React.Component{
 	validateField( data ){
 		//Verificacion de longitud
 		let w = data.split(',');
-		if( w.length != 2 ) return false;
+		if( w.length > 3 ) return false;
 		let regex = /^\d+(\.\d{1,14})?$/i;
 
 		for (var i = 0; i < w.length; i++) {

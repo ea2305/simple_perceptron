@@ -1,5 +1,4 @@
 # Webpack React boilerplate
-
 Basic implementation of webpack with reactjs
 
 ## Requirements
